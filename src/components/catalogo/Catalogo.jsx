@@ -256,6 +256,50 @@ const handleFilterChange = (updatedFilters) => {
 
 {/*productos*/}
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 flex-1">
+
+{product.map((product) => {
+    const inCart = isProductInCart(product.id) > 0;
+    return (
+      <div
+        key={product.id}
+        className={`relative group rounded-lg shadow-md transform transition-transform hover:scale-105 overflow-hidden 
+          ${inCart ? 'opacity-80' : 'opacity-100'}`}
+        style={{ height: '450px', width: '100%' }}
+        onClick={() => navigate(`/product/${product.id}`, { state: { product } })}
+      >
+        {/* Imagen del producto con efecto dinámico */}
+        <img
+          src={product.imgPath}
+          alt={product.name}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+        />
+
+        {/* Información del producto */}
+        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4 transition-transform duration-300 group-hover:translate-y-0 translate-y-[70%]">
+          {/* Nombre del producto */}
+          <h3 className="text-lg font-medium">{product.name}</h3>
+
+          {/* Información adicional (se muestra al hover) */}
+          <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <p className="text-lg">${product.price.toLocaleString()}</p>
+            <button
+              className={`mt-4 w-full flex items-center justify-center p-2 rounded bg-black bg-opacity-50 hover:bg-opacity-75 transition-all 
+                ${favoriteItems.includes(product.id) ? 'text-red-500' : 'text-gray-300'}`}
+              onClick={(e) => {
+                e.stopPropagation(); // Evitar navegación
+                toggleFavorite(product.id);
+              }}
+            >
+              <span className="material-symbols-outlined text-2xl">
+                {favoriteItems.includes(product.id) ? 'favorite' : 'favorite_border'}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  })}
+
   {currentProducts.map((product) => {
     const inCart = isProductInCart(product.id) > 0;
     return (
